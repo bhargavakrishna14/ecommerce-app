@@ -103,7 +103,116 @@ This system follows a **microservices architecture**, with distributed tracing, 
 - Maven
 - Git
 
-### Clone the Repository
-```bash
-git clone https://github.com/yourusername/ecommerce-microservices.git
-cd ecommerce-microservices
+---
+
+### ⚙️ Running the application
+- Make sure Docker containers are running and API Gateway has successfully registered all services.
+- Run all the services in the given order:
+- Config-server, discovery, 5 microservices in any order and then gateway
+
+---
+
+
+## 🔎 Service Access & Monitoring
+
+Once the application and supporting services are up using Docker Compose (`docker-compose up`), you can access the following tools to monitor and debug the microservices:
+
+### 🔁 Service Discovery - Eureka Server
+
+- **Description:** Eureka is the service registry where all microservices register themselves and discover each other.
+- **Default URL:** [http://localhost:8761](http://localhost:8761)
+- **What to check:** Each microservice should appear as a registered instance here. Refresh the page to see dynamic status updates.
+
+---
+
+### 📦 Distributed Tracing - Zipkin
+
+- **Description:** Zipkin provides distributed tracing to follow the path of a request as it travels through the services.
+- **Default URL:** [http://localhost:9411](http://localhost:9411)
+- **How to use:**
+  - Make a request through your frontend (e.g. placing an order).
+  - Visit the Zipkin UI and click “Find Traces”.
+  - You'll see the full timeline and breakdown of microservice interactions.
+
+---
+
+### 📬 Mail Testing - MailDev
+
+- **Description:** MailDev captures outgoing emails sent by the Notification Service (e.g., order or payment confirmations).
+- **MailDev UI:** [http://localhost:1080](http://localhost:1080)
+- **SMTP Host & Port:**
+  - Host: `localhost`
+  - Port: `1025`
+- **Use case:** When Notification service sends an email, it will be displayed here for preview.
+
+---
+
+### 🐘 PostgreSQL & pgAdmin
+
+- **PostgreSQL Database:**
+  - Host: `localhost`
+  - Port: `5432`
+  - Username: `postgres`
+  - Password: `postgres`
+
+- **pgAdmin UI:**
+  - URL: [http://localhost:5050](http://localhost:5050)
+  - Email: `pgadmin4@pgadmin.org` (default)
+  - Password: `admin` (default)
+
+> After logging in to pgAdmin, you’ll need to register the PostgreSQL server manually with:
+> - Host: `postgresql`
+> - Port: `5432`
+
+---
+
+### 🍃 MongoDB & Mongo Express
+
+- **MongoDB Instance:**
+  - Host: `localhost`
+  - Port: `27017`
+  - Username: `root`
+  - Password: `root`
+
+- **Mongo Express UI:**
+  - URL: [http://localhost:8081](http://localhost:8081)
+  - Login using the above credentials
+
+---
+
+### 🔗 Kafka & Zookeeper (Internal)
+
+- **Kafka Broker:** `localhost:9092`
+- **Zookeeper:** `localhost:22181`
+
+> Use external tools like [AKHQ](https://akhq.io/) or [Kafka Tool](https://kafkatool.com/) if you want a Kafka UI.
+
+---
+
+### ✅ Quick Reference Table
+
+| Service        | URL                             | Notes                                 |
+|----------------|----------------------------------|---------------------------------------|
+| Eureka Server  | http://localhost:8761           | Service registry                      |
+| Zipkin         | http://localhost:9411           | Distributed tracing UI                |
+| MailDev        | http://localhost:1080           | Test email inbox                      |
+| pgAdmin        | http://localhost:5050           | PostgreSQL admin GUI                  |
+| Mongo Express  | http://localhost:8081           | MongoDB web UI                        |
+
+---
+
+## 🧪 API Testing with Postman
+
+You can interact with the system using the following API endpoints exposed via the **API Gateway** (`localhost:8222`).
+
+| Method | Endpoint                                  | Description         |
+|--------|-------------------------------------------|---------------------|
+| GET    | `http://localhost:8222/api/v1/products`   | Retrieve all products |
+| POST   | `http://localhost:8222/api/v1/customers`  | Create a new customer |
+| POST   | `http://localhost:8222/api/v1/orders`     | Create a new order |
+
+### ⚙️ Setup for Postman
+- Base URL: `http://localhost:8222/api/v1`
+- Make sure Docker containers are running and API Gateway has successfully registered all services.
+
+---
