@@ -91,7 +91,6 @@ This system follows a **microservices architecture**, with distributed tracing, 
 ## 📃 Centralized Configuration
 
 - Each microservice pulls configuration from **Spring Cloud Config Server**.
-- Configs are stored in a Git-backed repo.
 
 ---
 
