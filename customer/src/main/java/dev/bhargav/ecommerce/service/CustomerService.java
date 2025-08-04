@@ -50,6 +50,9 @@ public class CustomerService {
         if (StringUtils.isNotBlank(customerRequest.firstname())) {
             customer.setFirstname(customerRequest.firstname());
         }
+        if (StringUtils.isNotBlank(customerRequest.lastname())) {
+            customer.setLastname(customerRequest.lastname());
+        }
         if (StringUtils.isNotBlank(customerRequest.email())) {
             customer.setEmail(customerRequest.email());
         }
