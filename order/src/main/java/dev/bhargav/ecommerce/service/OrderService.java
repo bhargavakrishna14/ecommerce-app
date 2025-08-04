@@ -1,7 +1,6 @@
 package dev.bhargav.ecommerce.service;
 
 import dev.bhargav.ecommerce.customer.CustomerClient;
-import dev.bhargav.ecommerce.dto.OrderLineRequest;
 import dev.bhargav.ecommerce.dto.OrderRequest;
 import dev.bhargav.ecommerce.dto.OrderResponse;
 import dev.bhargav.ecommerce.entity.OrderLine;
@@ -12,7 +11,6 @@ import dev.bhargav.ecommerce.mapper.OrderMapper;
 import dev.bhargav.ecommerce.payment.PaymentClient;
 import dev.bhargav.ecommerce.payment.PaymentRequest;
 import dev.bhargav.ecommerce.product.ProductClient;
-import dev.bhargav.ecommerce.product.PurchaseRequest;
 import dev.bhargav.ecommerce.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
