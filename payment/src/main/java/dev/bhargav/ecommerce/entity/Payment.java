@@ -34,6 +34,9 @@ public class Payment {
 
     private Integer orderId;
 
+    @Column(nullable = false)
+    private String orderReference;
+
     @CreatedDate
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdDate;

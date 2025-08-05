@@ -12,11 +12,14 @@ public class PaymentMapper {
             return null;
         }
 
+//    Don’t set auditing fields (they’re auto-handled by JPA).
+
         return Payment.builder()
                 .id(paymentRequest.id())
                 .amount(paymentRequest.amount())
                 .paymentMethod(paymentRequest.paymentMethod())
                 .orderId(paymentRequest.orderId())
+                .orderReference(paymentRequest.orderReference())
                 .build();
     }
 

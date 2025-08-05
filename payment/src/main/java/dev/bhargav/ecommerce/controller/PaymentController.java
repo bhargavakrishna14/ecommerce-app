@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
@@ -23,7 +25,8 @@ public class PaymentController {
             @RequestBody @Valid PaymentRequest paymentRequest
     ) {
         Integer id = this.paymentService.createPayment(paymentRequest);
-        return ResponseEntity.ok(new PaymentResponse(id));
+        return ResponseEntity.created(URI.create("/api/v1/payments/" + id))
+                .body(new PaymentResponse(id));
         }
 
 }
