@@ -11,12 +11,14 @@ import dev.bhargav.ecommerce.mapper.OrderMapper;
 import dev.bhargav.ecommerce.payment.PaymentClient;
 import dev.bhargav.ecommerce.payment.PaymentRequest;
 import dev.bhargav.ecommerce.product.ProductClient;
+import dev.bhargav.ecommerce.product.PurchaseResponse;
 import dev.bhargav.ecommerce.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,13 +44,24 @@ public class OrderService {
     public Integer createOrder(OrderRequest orderRequest) {
         // Validate customer existence
         var customer = customerClient.findCustomerById(orderRequest.customerId())
-                .orElseThrow(() -> new BusinessException("Cannot create order:: No customer exists with the provided ID"));
+                .orElseThrow(() -> new BusinessException("Cannot create order: No customer found with ID " + orderRequest.customerId()));
 
-        // Validate/purchase products
-        var purchasedProducts = productClient.purchaseProducts(orderRequest.products());
+        // Validate & purchase products
+        List<PurchaseResponse> purchasedProducts;
+        try {
+            purchasedProducts = productClient.purchaseProducts(orderRequest.products());
+        } catch (Exception e) {
+            throw new BusinessException("Failed to purchase products: " + e.getMessage());
+        }
 
-        // Create order entity (without persisting yet)
+        // Calculate total amount (server-side)
+        BigDecimal totalAmount = purchasedProducts.stream()
+                .map(p -> p.price().multiply(BigDecimal.valueOf(p.quantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Create order
         var order = orderMapper.toOrder(orderRequest);
+        order.setTotalAmount(totalAmount);
 
         // Set order lines
         var orderLines = orderRequest.products().stream()
@@ -60,14 +73,13 @@ public class OrderService {
                 .collect(Collectors.toList());
 
         order.setOrderLines(orderLines);
-        order.setTotalAmount(orderRequest.amount());
 
         // Save the order with lines (CascadeType.ALL assumed)
         var savedOrder = orderRepository.save(order);
 
         // Call payment client
         paymentClient.requestOrderPayment(new PaymentRequest(
-                orderRequest.amount(),
+                orderRequest.totalAmount(),
                 orderRequest.paymentMethod(),
                 savedOrder.getId(),
                 savedOrder.getReference(),

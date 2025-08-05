@@ -2,6 +2,7 @@ package dev.bhargav.ecommerce.service;
 
 import dev.bhargav.ecommerce.dto.OrderLineRequest;
 import dev.bhargav.ecommerce.dto.OrderLineResponse;
+import dev.bhargav.ecommerce.exception.BusinessException;
 import dev.bhargav.ecommerce.mapper.OrderLineMapper;
 import dev.bhargav.ecommerce.repository.OrderLineRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,10 @@ public class OrderLineService {
     }
 
     public List<OrderLineResponse> findAllByOrderId(Integer orderId) {
+        if (!orderLineRepository.existsByOrderId(orderId)) {
+            throw new BusinessException("Order with id " + orderId + " not found");
+        }
+
         return orderLineRepository.findAllByOrderId(orderId)
                 .stream()
                 .map(orderLineMapper::toOrderLineResponse)

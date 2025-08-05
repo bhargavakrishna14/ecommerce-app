@@ -9,4 +9,5 @@ public interface OrderLineRepository extends JpaRepository<OrderLine, Integer> {
 
     List<OrderLine> findAllByOrderId(Integer orderId);
 
+    boolean existsByOrderId(Integer orderId);
 }

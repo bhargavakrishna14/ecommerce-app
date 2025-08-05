@@ -16,18 +16,25 @@ public class OrderMapper {
         return Order.builder()
                 .id(request.id())
                 .reference(request.reference())
+                .totalAmount(request.totalAmount())
                 .paymentMethod(request.paymentMethod())
                 .customerId(request.customerId())
                 .build();
     }
 
     public OrderResponse fromOrder(Order order) {
+        if (order == null) {
+            return null;
+        }
+
         return new OrderResponse(
                 order.getId(),
                 order.getReference(),
                 order.getTotalAmount(),
                 order.getPaymentMethod(),
-                order.getCustomerId()
+                order.getCustomerId(),
+                order.getCreatedDate(),
+                order.getLastModifiedDate()
         );
     }
 

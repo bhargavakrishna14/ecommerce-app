@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.validation.annotation.Validated;
 
+import java.math.BigDecimal;
+
 @Validated
 public record PurchaseRequest(
 
@@ -11,6 +13,6 @@ public record PurchaseRequest(
         Integer productId,
 
         @Positive(message = "Quantity is mandatory")
-        double quantity
+        BigDecimal quantity
 ) {
 }

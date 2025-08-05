@@ -6,12 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "customer_line")
+@Table(name = "order_line")
 public class OrderLine {
 
     @Id
@@ -24,5 +26,5 @@ public class OrderLine {
 
     private Integer productId;
 
-    private double quantity;
+    private BigDecimal quantity;
 }
