@@ -6,6 +6,7 @@ import dev.bhargav.ecommerce.dto.ProductRequest;
 import dev.bhargav.ecommerce.dto.ProductResponse;
 import dev.bhargav.ecommerce.exception.ProductPurchaseException;
 import dev.bhargav.ecommerce.mapper.ProductMapper;
+import dev.bhargav.ecommerce.repository.CategoryRepository;
 import dev.bhargav.ecommerce.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +23,16 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
+
     private final ProductMapper productMapper;
 
+    private final CategoryRepository categoryRepository;
+
     public Integer createProduct(ProductRequest productRequest) {
-        var product = productMapper.toProduct(productRequest);
+        var category = categoryRepository.findById(productRequest.categoryId())
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID:: " + productRequest.categoryId()));
+
+        var product = productMapper.toProduct(productRequest, category);
         return productRepository.save(product).getId();
     }
 
@@ -67,15 +74,18 @@ public class ProductService {
             var productRequest = sortedRequest.get(i);
 
             if (product.getAvailableQuantity() < productRequest.quantity()) {
-                throw new ProductPurchaseException("Insufficient stock quantity for product with ID:: " + productRequest.productId());
+                throw new ProductPurchaseException("Insufficient stock for product: " + product.getName());
             }
 
             var newAvailableQuantity = product.getAvailableQuantity() - productRequest.quantity();
             product.setAvailableQuantity(newAvailableQuantity);
-            productRepository.save(product);
 
             purchasedProducts.add(productMapper.toProductPurchaseResponse(product, productRequest.quantity()));
         }
+
+        // Save all updated products in one batch
+        productRepository.saveAll(storedProducts);
+
         return purchasedProducts;
     }
 }
