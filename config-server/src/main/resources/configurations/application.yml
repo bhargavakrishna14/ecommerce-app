@@ -1,3 +1,6 @@
+# All other configuration (.yml) files that are in the same "/configurations" folder
+# will inherit this base "application.yml" file configuration.
+
 eureka:
   instance:
     hostname: localhost

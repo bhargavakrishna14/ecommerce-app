@@ -8,22 +8,22 @@ spring:
           enabled: true
       routes:
         - id: customer
-          uri: lb:http://CUSTOMER
+          uri: lb://CUSTOMER
           predicates:
             - Path=/api/v1/customers/**
         - id: order
-          uri: lb:http://ORDER
+          uri: lb://ORDER
           predicates:
             - Path=/api/v1/orders/**
         - id: order-lines
-          uri: lb:http://ORDER
+          uri: lb://ORDER
           predicates:
             - Path=/api/v1/order-lines/**
         - id: product
-          uri: lb:http://PRODUCT
+          uri: lb://PRODUCT
           predicates:
             - Path=/api/v1/products/**
         - id: payment
-          uri: lb:http://PAYMENT
+          uri: lb://PAYMENT
           predicates:
             - Path=/api/v1/payments/**
